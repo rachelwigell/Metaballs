@@ -1,5 +1,5 @@
-public final static int fieldX = 300;
-public final static int fieldY = 300;
+public final static int fieldX = 200;
+public final static int fieldY = 200;
 
 public ArrayList metaballs = new ArrayList();
 int metaballThreshold = 4;
@@ -7,20 +7,20 @@ Metaball creating = null;
 boolean metaballMode = true;
 
 color fieldLineColor = 0;
-float fieldLineThreshold = .015;
+float fieldLineThreshold = .02;
 float fieldLineCharge = 0;
 public ArrayList oldPixels = new ArrayList();
 public ArrayList newPixels = new ArrayList();
 float[][] charges = new float[fieldX][fieldY];
 
 void setup(){
-  size(fieldX, fieldY, P2D);
+  size(200, 200, P2D);
   frameRate(10);
 }
 
 void draw(){
-  background(0);
   if(metaballMode){
+    background(0);
     renderMetaballs();
     growCreating();
   }
@@ -62,6 +62,9 @@ void mouseReleased(){
     metaballs.add(new Metaball(creating));
     creating = null;
   }
+  else{
+    fieldLineColor = 0;
+  }
 }
 
 public void growCreating(){
@@ -78,29 +81,33 @@ public void growCreating(){
 }
 
 public void growFieldLine(){
-  newPixels = new ArrayList();
-  for(int i = 0; i < oldPixels.size(); i++){
-    Vector2D pixel = (Vector2D) oldPixels.get(i);
-    set((int) pixel.x, (int) pixel.y, fieldLineColor);
-    ArrayList surroundingPixels = new ArrayList();
-    surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y));
-    surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y+1));
-    surroundingPixels.add(new Vector2D(pixel.x, pixel.y+1));
-    surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y));
-    surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y-1));
-    surroundingPixels.add(new Vector2D(pixel.x, pixel.y-1));
-    surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y-1));
-    surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y+1));
-    for(int j = 0; j < 8; j++){
-      Vector2D adjacentPixel = (Vector2D) surroundingPixels.get(j);
-      if(within(charges[(int) adjacentPixel.x][(int) adjacentPixel.y], fieldLineCharge, fieldLineThreshold)){
-        newPixels.add(adjacentPixel);
+  if(fieldLineColor != 0){
+    newPixels = new ArrayList();
+    for(int i = 0; i < oldPixels.size(); i++){
+      Vector2D pixel = (Vector2D) oldPixels.get(i);
+      set((int) pixel.x, (int) pixel.y, fieldLineColor);
+      loadPixels();
+      ArrayList surroundingPixels = new ArrayList();
+      surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y));
+      surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y+1));
+      surroundingPixels.add(new Vector2D(pixel.x, pixel.y+1));
+      surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y));
+      surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y-1));
+      surroundingPixels.add(new Vector2D(pixel.x, pixel.y-1));
+      surroundingPixels.add(new Vector2D(pixel.x+1, pixel.y-1));
+      surroundingPixels.add(new Vector2D(pixel.x-1, pixel.y+1));
+      for(int j = 0; j < 8; j++){
+        Vector2D adjacentPixel = (Vector2D) surroundingPixels.get(j);
+        if(pixels[(int) (fieldX * adjacentPixel.y + adjacentPixel.x)] != fieldLineColor
+        && within(charges[(int) adjacentPixel.x][(int) adjacentPixel.y], fieldLineCharge, fieldLineThreshold)){
+          newPixels.add(adjacentPixel);
+        }
       }
     }
-  }
-  oldPixels = new ArrayList();
-  for(int i = 0; i < newPixels.size(); i++){
-    oldPixels.add(newPixels.get(i));
+    oldPixels = new ArrayList();
+    for(int i = 0; i < newPixels.size(); i++){
+      oldPixels.add(newPixels.get(i));
+    }
   }
 }
 
