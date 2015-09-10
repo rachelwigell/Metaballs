@@ -3,6 +3,7 @@ public final static int fieldY = 600;
 
 public ArrayList metaballs = new ArrayList();
 int threshold = 4;
+Metaball creating = null;
 
 void setup(){
   size(fieldX, fieldY, P2D);
@@ -12,14 +13,35 @@ void setup(){
 void draw(){
   background(0);
   renderMetaballs();
+  fill(255);
+  growCreating();
 }
 
-void mouseClicked(){
-  metaballs.add(new Metaball(mouseX, mouseY, 1000000));
+void mousePressed(){
+  if(mouseButton == LEFT){
+    creating = new Metaball(mouseX, mouseY, 1000);
+  }
+  else{
+    creating = new Metaball(mouseX, mouseY, -1000);
+  }
 }
 
-void mouseDragged(){
-  ((Metaball) (metaballs.get(0))).move(new Vector2D(mouseX, mouseY));
+void mouseReleased(){
+  metaballs.add(new Metaball(creating));
+  creating = null;
+}
+
+public void growCreating(){
+  if(creating != null){
+    if(mouseButton == LEFT){
+      creating.charge += 1000;
+    }
+    else{
+      creating.charge -= 1000;
+    }
+    creating.center.x = mouseX;
+    creating.center.y = mouseY;
+  }
 }
 
 public float netChargeHere(Vector2D here){
@@ -27,6 +49,9 @@ public float netChargeHere(Vector2D here){
   for(int i = 0; i < metaballs.size(); i++){
       Metaball m = (Metaball) metaballs.get(i);
       total += m.chargeFrom(here);
+  }
+  if(creating != null){
+    total += creating.chargeFrom(here);
   }
   return total;
 }

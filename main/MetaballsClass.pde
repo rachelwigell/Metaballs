@@ -1,12 +1,15 @@
 public class Metaball {
   Vector2D center;
   int charge;
-  boolean selected;
 
   public Metaball(int centerX, int centerY, int charge){
     this.center = new Vector2D(centerX, centerY);
     this.charge = charge;
-    selected = false;
+  }
+  
+  public Metaball(Metaball toDup){
+    this.center = new Vector2D(toDup.center.x, toDup.center.y);
+    this.charge = toDup.charge;
   }
   
   public void move(Vector2D to){
@@ -22,7 +25,7 @@ public class Metaball {
   }
   
   public float chargeFrom(Vector2D from){
-    float rad = this.squaredDistFromCenter(from);
+    float rad = this.distanceFromCenter(from);
     return this.charge/(rad * rad);
   } 
 }
