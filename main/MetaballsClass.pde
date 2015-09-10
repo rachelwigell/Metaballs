@@ -22,7 +22,7 @@ public class Metaball {
   }
   
   public float chargeFrom(Vector2D from){
-    float rad = this.distanceFromCenter(from);
+    float rad = this.squaredDistFromCenter(from);
     return this.charge/(rad * rad);
   } 
 }
