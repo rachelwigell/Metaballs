@@ -1,5 +1,5 @@
-public final static int fieldX = 600;
-public final static int fieldY = 400;
+public final static int fieldX = 400;
+public final static int fieldY = 300;
 
 public ArrayList metaballs = new ArrayList();
 int metaballThreshold = 4;
@@ -15,7 +15,7 @@ public ArrayList newPixels = new ArrayList();
 float[][] charges = new float[fieldX][fieldY];
 
 void setup(){
-  size(600, 400, P2D);
+  size(400, 400, P2D);
   frameRate(10);
 }
 
@@ -24,6 +24,7 @@ void draw(){
     background(0);
     renderMetaballs();
     growCreating();
+    drawButton();
   }
   else{
     growFieldLine();
@@ -41,18 +42,19 @@ void draw(){
 //  }
 //}
 
-void keyPressed(){
-  allRepel = !allRepel;
-  updateChargeArray();
-}
-
 void mousePressed(){
   if(metaballMode){
-    if(mouseButton == LEFT){
-      creating = new Metaball(mouseX, mouseY, 1000);
+    if(mouseY < 300){
+      if(mouseButton == LEFT){
+        creating = new Metaball(mouseX, mouseY, 1000);
+      }
+      else{
+        creating = new Metaball(mouseX, mouseY, -1000);
+      }
     }
     else{
-      creating = new Metaball(mouseX, mouseY, -1000);
+      allRepel = !allRepel;
+      updateChargeArray();
     }
   }
   else{
@@ -64,14 +66,20 @@ void mousePressed(){
 }
 
 void mouseReleased(){
-  if(metaballMode){
+  if(metaballMode && creating != null){
     metaballs.add(new Metaball(creating));
     creating = null;
-    System.out.println(metaballs.size());
   }
   else{
     fieldLineColor = 0;
   }
+}
+
+public void drawButton(){
+  fill(255);
+  rect(0, 300, 400, 100);
+  fill(0);
+  text("Click to change modes", 100, 350);
 }
 
 public void growCreating(){
@@ -140,18 +148,18 @@ public float netChargeMutallyRepulsive(Vector2D here, Metaball ball){
   for(int i = 0; i < metaballs.size(); i++){
       Metaball m = (Metaball) metaballs.get(i);
       if(m.center.samePoint(ball.center)){
-        total += m.chargeFrom(here);
+        total += abs(m.chargeFrom(here));
       }
       else{
-        total -= m.chargeFrom(here);
+        total -= abs(m.chargeFrom(here));
       }      
   }
   if(creating != null){
     if(creating.center.samePoint(ball.center)){
-        total += creating.chargeFrom(here);
+        total += abs(creating.chargeFrom(here));
       }
     else{
-      total -= creating.chargeFrom(here);
+      total -= abs(creating.chargeFrom(here));
     }
   }
   return total;
