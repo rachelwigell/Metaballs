@@ -7,14 +7,26 @@
 </head>
 <body>
 	<center>
+		<h2>Metaballs Demo Page</h2>
 		<canvas id="processing" data-processing-sources="
 		main/MetaballsClass.pde
 		main/Vector2DClass.pde
 		main/main.pde
 		"></canvas>
+	<div class="row">
+		<div class="small-6 columns">
+			<button type="button" id="dipole-mode">Dipole mode</button><br>
+			In dipole mode, left click to place a positively charged metaball and right click to create a negatively charged one. Like charges will attract while opposite charges will repel.
+		</div>
+		<div class="small-6 columns">
+			<button type="button" id="repel-mode">Mutually repulsive mode</button><br>
+			In mutually repulsive mode, all metaballs will repel one another.
+		</div>
+	</div>
 	</center>
 	<script src="libraries/foundation-5.5.2/js/foundation.min.js"></script>
 	<script>
     	$(document).foundation();
   	</script>
+  	<script src="js/processingToHtmlInteraction.js"></script>
 </body>
