@@ -67,6 +67,7 @@ void mouseReleased(){
   if(metaballMode){
     metaballs.add(new Metaball(creating));
     creating = null;
+    System.out.println(metaballs.size());
   }
   else{
     fieldLineColor = 0;
@@ -177,18 +178,19 @@ public void updateChargeArray(){
   else{
     for(int i = 0; i < fieldX; i++){
       for(int j = 0; j < fieldY; j++){
+        charges[i][j] = 0;
         Vector2D here = new Vector2D(i, j);
         for(int k = 0; k < metaballs.size(); k++){
-          Metaball m = (Metaball) metaballs.get(i);
+          Metaball m = (Metaball) metaballs.get(k);
           float chargeHere = netChargeMutallyRepulsive(here, m);
           if(chargeHere > metaballThreshold){
             charges[i][j] = 1;
           }
-          else if(chargeHere < -metaballThreshold){
+        }
+        if(creating != null){
+          float chargeHere = netChargeMutallyRepulsive(here, creating);
+          if(chargeHere > metaballThreshold){
             charges[i][j] = 1;
-          }
-          else{
-            charges[i][j] = 0;
           }
         }
       }
