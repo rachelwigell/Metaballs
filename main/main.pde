@@ -1,10 +1,11 @@
-public final static int fieldX = 200;
-public final static int fieldY = 200;
+public final static int fieldX = 600;
+public final static int fieldY = 400;
 
 public ArrayList metaballs = new ArrayList();
 int metaballThreshold = 4;
 Metaball creating = null;
 boolean metaballMode = true;
+boolean allRepel = false;
 
 color fieldLineColor = 0;
 float fieldLineThreshold = .02;
@@ -14,7 +15,7 @@ public ArrayList newPixels = new ArrayList();
 float[][] charges = new float[fieldX][fieldY];
 
 void setup(){
-  size(200, 200, P2D);
+  size(600, 400, P2D);
   frameRate(10);
 }
 
@@ -29,15 +30,20 @@ void draw(){
   }
 }
 
+//void keyPressed(){
+//  metaballMode = !metaballMode;
+//  if(!metaballMode){
+//    for(int i = 0; i < fieldX; i++){
+//      for(int j = 0; j < fieldY; j++){
+//        charges[i][j] = netChargeHere(new Vector2D(i, j));
+//      }
+//    }
+//  }
+//}
+
 void keyPressed(){
-  metaballMode = !metaballMode;
-  if(!metaballMode){
-    for(int i = 0; i < fieldX; i++){
-      for(int j = 0; j < fieldY; j++){
-        charges[i][j] = netChargeHere(new Vector2D(i, j));
-      }
-    }
-  }
+  allRepel = !allRepel;
+  updateChargeArray();
 }
 
 void mousePressed(){
@@ -77,6 +83,7 @@ public void growCreating(){
     }
     creating.center.x = mouseX;
     creating.center.y = mouseY;
+    updateChargeArray();
   }
 }
 
@@ -127,30 +134,93 @@ public float netChargeHere(Vector2D here){
   return total;
 }
 
-public float netChargeMinusThis(Vector2D here, Metaball ball){
+public float netChargeMutallyRepulsive(Vector2D here, Metaball ball){
   float total = 0;
   for(int i = 0; i < metaballs.size(); i++){
-    Metaball m = (Metaball) metaballs.get(i);
-    if(!m.center.samePoint(ball.center)){
-      total += m.chargeFrom(here);
+      Metaball m = (Metaball) metaballs.get(i);
+      if(m.center.samePoint(ball.center)){
+        total += m.chargeFrom(here);
+      }
+      else{
+        total -= m.chargeFrom(here);
+      }      
+  }
+  if(creating != null){
+    if(creating.center.samePoint(ball.center)){
+        total += creating.chargeFrom(here);
+      }
+    else{
+      total -= creating.chargeFrom(here);
     }
   }
   return total;
 }
 
-public void renderMetaballs(){
-  for(int i = 0; i < fieldX; i++){
-    for(int j = 0; j < fieldY; j++){
-      Vector2D here = new Vector2D(i, j);
+public void updateChargeArray(){
+  if(!allRepel){
+    for(int i = 0; i < fieldX; i++){
+      for(int j = 0; j < fieldY; j++){
+        Vector2D here = new Vector2D(i, j);
+        float chargeHere = netChargeHere(here);
+        if(chargeHere > metaballThreshold){
+          charges[i][j] = 1;
+        }
+        else if(chargeHere < -metaballThreshold){
+          charges[i][j] = -1;
+        }
+        else{
+          charges[i][j] = 0;
+        }
+      }
+    }
+  }
+  else{
+    for(int i = 0; i < fieldX; i++){
+      for(int j = 0; j < fieldY; j++){
+        Vector2D here = new Vector2D(i, j);
+        for(int k = 0; k < metaballs.size(); k++){
+          Metaball m = (Metaball) metaballs.get(i);
+          float chargeHere = netChargeMutallyRepulsive(here, m);
+          if(chargeHere > metaballThreshold){
+            charges[i][j] = 1;
+          }
+          else if(chargeHere < -metaballThreshold){
+            charges[i][j] = 1;
+          }
+          else{
+            charges[i][j] = 0;
+          }
+        }
+      }
+    }
+  }
+}
 
-      if(netChargeHere(here) > metaballThreshold){
-        set(i, j, color(180, 80, 80));
+public void renderMetaballs(){
+  if(!allRepel){
+    for(int i = 0; i < fieldX; i++){
+      for(int j = 0; j < fieldY; j++){
+        if(charges[i][j] == 1){
+          set(i, j, color(180, 80, 80));
+        }
+        else if(charges[i][j] == -1){
+          set(i, j, color(80, 80, 180));
+        }
+        else{
+          set(i, j, color(0, 0, 0));
+        }
       }
-      else if(netChargeHere(here) < -metaballThreshold){
-        set(i, j, color(80, 80, 180));
-      }
-      else{
-        set(i, j, color(0, 0, 0));
+    }
+  }
+  else{
+    for(int i = 0; i < fieldX; i++){
+      for(int j = 0; j < fieldY; j++){
+        if(charges[i][j] == 1){
+          set(i, j, color(80, 180, 80));
+        }
+        else{
+          set(i, j, color(0, 0, 0));
+        }
       }
     }
   }
