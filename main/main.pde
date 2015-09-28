@@ -76,9 +76,11 @@ void mouseReleased(){
 }
 
 public void drawButton(){
+  stroke(0);
   fill(255);
-  rect(0, 300, 400, 100);
+  rect(0, 300, 399, 99);
   fill(0);
+  textSize(16);
   text("Click to change modes", 100, 350);
 }
 
