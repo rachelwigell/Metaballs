@@ -4,10 +4,15 @@
 	<link rel="stylesheet" href="libraries/foundation-5.5.2/css/normalize.css">
 	<script src="libraries/processing.js"></script>
 	<script src="libraries/jquery-1.11.3.min.js"></script>
+	<style>
+		p {
+			font-size: small
+		}
+	</style>
 </head>
 <body>
 	<center>
-		<h2>Metaballs Demo Page</h2>
+		<h2>Metaballs</h2>
 		<canvas id="processing" data-processing-sources="
 		main/MetaballsClass.pde
 		main/Vector2DClass.pde
@@ -22,6 +27,57 @@
 			<button type="button" id="repel-mode">Mutually repulsive mode</button><br>
 			In mutually repulsive mode, all metaballs will repel one another.
 		</div>
+	</div>
+	<div class="row">
+		<div class="small-2 columns">
+			<a href="https://twitter.com/share" class="twitter-share-button"{count} data-url="http://rachelwigell.github.io/Metaballs/" data-text="A demo of metaballs, a concept in computer graphics.">Tweet</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		</div>
+		<div class="small-2 columns">
+			<div class="fb-share-button" data-href="http://rachelwigell.github.io/Metaballs/" data-layout="button"></div>
+		</div>
+		<div class="small-2 columns">
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+				">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+		<div class="small-2 columns">
+			<a target="_blank"
+			   href="http://venmo.com/?txn=pay&share=public&recipients=rachelwigell@alum.wpi.edu&amount=5.00&note=Metaballs%20Demo!%20http://rachelwigell.github.io/Metaballs/">
+			   Donate with Venmo
+			</a>
+		</div>
+		<div class="small-2 columns">
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- MetaballsBottom -->
+			<ins class="adsbygoogle"
+			     style="display:inline-block;width:320px;height:100px"
+			     data-ad-client="ca-pub-4926371143211898"
+			     data-ad-slot="4305097560"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</div>
+	<div>
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-71163706-4', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
+	</div>
+	<div class="row">
+		<p>
+			More: <a href="http://rachelwigell.github.io/AquiSim/">AquiSim</a> | <a href="http://rachelwigell.github.io/Psychedelic-Field-Lines/">Psychedelic Field Lines</a> |  <a href="http://rachelwigell.github.io/Mathematical-Sunset/">Mathematical Sunset</a>
+		</p>
 	</div>
 	</center>
 	<script src="libraries/foundation-5.5.2/js/foundation.min.js"></script>
