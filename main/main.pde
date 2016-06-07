@@ -5,7 +5,6 @@ public ArrayList metaballs = new ArrayList();
 int metaballThreshold = 4;
 Metaball creating = null;
 boolean allRepel = false;
-float[][] charges = new float[fieldX][fieldY];
 
 void setup(){
   size(400, 300, P2D);
@@ -13,7 +12,6 @@ void setup(){
 }
 
 void draw(){
-  background(0);
   renderMetaballs();
   growCreating();
 }
@@ -21,7 +19,6 @@ void draw(){
 public void toggleMode(boolean dipole){
   if(dipole == allRepel){
     allRepel = !allRepel;
-    updateChargeArray();
   }
 }
 
@@ -51,7 +48,6 @@ public void growCreating(){
     }
     creating.center.x = mouseX;
     creating.center.y = mouseY;
-    updateChargeArray();
   }
 }
 
@@ -93,20 +89,20 @@ public float netChargeMutallyRepulsive(Vector2D here, Metaball ball){
   return total;
 }
 
-public void updateChargeArray(){
+public void renderMetaballs(){
   if(!allRepel){
     for(int i = 0; i < fieldX; i++){
       for(int j = 0; j < fieldY; j++){
         Vector2D here = new Vector2D(i, j);
         float chargeHere = netChargeHere(here);
         if(chargeHere > metaballThreshold){
-          charges[i][j] = 1;
+          set(i, j, color(180, 80, 80));
         }
         else if(chargeHere < -metaballThreshold){
-          charges[i][j] = -1;
+          set(i, j, color(80, 80, 180));
         }
         else{
-          charges[i][j] = 0;
+          set(i, j, color(0));
         }
       }
     }
@@ -114,50 +110,20 @@ public void updateChargeArray(){
   else{
     for(int i = 0; i < fieldX; i++){
       for(int j = 0; j < fieldY; j++){
-        charges[i][j] = 0;
+        set(i, j, color(0));
         Vector2D here = new Vector2D(i, j);
         for(int k = 0; k < metaballs.size(); k++){
           Metaball m = (Metaball) metaballs.get(k);
           float chargeHere = netChargeMutallyRepulsive(here, m);
           if(chargeHere > metaballThreshold){
-            charges[i][j] = 1;
+            set(i, j, color(80, 180, 80));
           }
         }
         if(creating != null){
           float chargeHere = netChargeMutallyRepulsive(here, creating);
           if(chargeHere > metaballThreshold){
-            charges[i][j] = 1;
+            set(i, j, color(80, 180, 80));
           }
-        }
-      }
-    }
-  }
-}
-
-public void renderMetaballs(){
-  if(!allRepel){
-    for(int i = 0; i < fieldX; i++){
-      for(int j = 0; j < fieldY; j++){
-        if(charges[i][j] == 1){
-          set(i, j, color(180, 80, 80));
-        }
-        else if(charges[i][j] == -1){
-          set(i, j, color(80, 80, 180));
-        }
-        else{
-          set(i, j, color(0, 0, 0));
-        }
-      }
-    }
-  }
-  else{
-    for(int i = 0; i < fieldX; i++){
-      for(int j = 0; j < fieldY; j++){
-        if(charges[i][j] == 1){
-          set(i, j, color(80, 180, 80));
-        }
-        else{
-          set(i, j, color(0, 0, 0));
         }
       }
     }
